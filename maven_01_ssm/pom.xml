@@ -1,0 +1,59 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.maven</groupId>
+  <artifactId>maven_01_ssm</artifactId>
+  <packaging>war</packaging>
+    <version>1.0-RELEASE</version>
+  <name>maven_01_ssm Maven Webapp</name>
+  <url>http://maven.apache.org</url>
+
+
+<!--    父工程坐标-->
+    <parent>
+        <groupId>com.maven</groupId>
+        <artifactId>maven_03_parent</artifactId>
+        <version>1.0-RELEASE</version>
+        <relativePath>../maven_03_parent</relativePath>
+    </parent>
+
+
+  <dependencies>
+
+<!--    导入entity的坐标-->
+    <dependency>
+      <groupId>com.maven</groupId>
+      <artifactId>maven_02_entity</artifactId>
+      <version>1.0-SNAPSHOT</version>
+
+    </dependency>
+
+<!--        //这里引用父工程的版本号，不需要写 版本号-->
+      <dependency>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-databind</artifactId>
+      </dependency>
+
+
+
+  </dependencies>
+  <!--    tamcat的插件-->
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.tomcat.maven</groupId>
+        <artifactId>tomcat7-maven-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+          <packaging>jar</packaging>
+          <port>8080</port>
+          <path>/</path>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
+
+

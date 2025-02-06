@@ -1,0 +1,176 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.maven</groupId>
+  <artifactId>maven_03_parent</artifactId>
+  <version>1.0-SNAPSHOT</version>
+<!--  聚合工程和继承都要设置打包方式为pom-->
+  <packaging>pom</packaging>
+
+
+
+
+<!--聚合工程，聚合的所有工程都会被打包起来-->
+  <modules>
+    <module>../maven_01_ssm</module>
+    <module>../maven_02_entity</module>
+  </modules>
+
+
+  <dependencies>
+    <!--    mvc相关坐标-->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.5</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>${spring.version}</version>
+      <!--        这个配置就是用来排除依赖，我是知道你有这个间接依赖，
+                  但是由于这个依赖会影响到我，所以说我在这里强制排除-->
+      <!--        <exclusions>-->
+      <!--            <exclusion>-->
+      <!--                <groupId>org.springframework</groupId>-->
+      <!--                <artifactId>spring-core</artifactId>-->
+      <!--            </exclusion>-->
+      <!--        </exclusions>-->
+    </dependency>
+
+
+
+
+
+    <!--    数据库相关坐标-->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>8.0.32</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>druid</artifactId>
+      <version>1.1.23</version>
+    </dependency>
+
+
+
+    <!--    mybatis相关坐标-->
+    <dependency>
+      <groupId>org.mybatis</groupId>
+      <artifactId>mybatis</artifactId>
+      <version>${mybatis.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mybatis</groupId>
+      <artifactId>mybatis-spring</artifactId>
+      <version>2.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <version>${spring.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+<!--  属性的配置，即定义一个变量名然后引用它-->
+
+  <properties>
+    <spring.version>5.2.10.RELEASE</spring.version>
+    <junit.version>4.13.2</junit.version>
+    <mybatis.version>3.5.13</mybatis.version>
+
+  </properties>
+
+
+<!--  这个标签里面依赖就是子工程，能够选择的，子工程可以有但是你需要声明，但是不需要写版本号，自动继承父工程的版本号-->
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>2.13.5</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+
+<!--  开启文件资源过滤器这样配置文件才能读取到值-->
+  <build>
+    <resources>
+      <resource>
+<!--        匹配当前目录下面的所有配置资源文件，即所有的配置文件都可以读取maven里面的配置          -->
+        <directory>${project.basedir}/src/main/resources</directory>
+<!--        开启文件过滤-->
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+  </build>
+
+
+
+<!--  配置多环境-->
+<profiles>
+<!--  开发环境-->
+  <profile>
+    <id>env_dep</id>
+    <properties>
+      <jdbc.url>jdbc:mysql://127.1.1.1:3306/ssm_db</jdbc.url>
+    </properties>
+<!--    设置当前配置为默认启动环境-->
+    <activation>
+      <activeByDefault>true</activeByDefault>
+    </activation>
+  </profile>
+
+  <!--  生产环境-->
+  <profile>
+    <id>env_pro</id>
+    <properties>
+      <jdbc.url>jdbc:mysql://127.2.2.1:3306/ssm_db</jdbc.url>
+    </properties>
+  </profile>
+
+  <!--  测试环境-->
+  <profile>
+    <id>env_test</id>
+    <properties>
+      <jdbc.url>jdbc:mysql://127.3.3.1:3306/ssm_db</jdbc.url>
+    </properties>
+  </profile>
+</profiles>
+
+
+<!--  配置当前工程在私服的具体位置  宿主仓库-->
+<distributionManagement>
+  <repository>
+    <id>qingjin-release</id>
+    <url>http://localhost:8081/repository/qingjin-release/</url>
+  </repository>
+  <snapshotRepository>
+    <id>qingjin-snapshot</id>
+    <url>http://localhost:8081/repository/qingjin-snapshot/</url>
+  </snapshotRepository>
+</distributionManagement>
+
+</project>
